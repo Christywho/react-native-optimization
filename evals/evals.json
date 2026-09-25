@@ -1,0 +1,60 @@
+{
+  "skill_name": "react-native-optimization",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "can you do a performance review of our app? it's a shopping app, nobody has complained about anything specific but we want it faster before the holiday sale",
+      "expected_output": "Project facts, a lead list from the static scan, 1-3 proposed journeys incl. cold start for the user to choose, no code edits.",
+      "files": [
+        "tests/fixture-app"
+      ],
+      "assertions": [
+        "Reports project facts: React Native 0.78.2, Hermes enabled, New Architecture enabled",
+        "Flags HomeScreen rendering the catalog with ScrollView + .map as a lead/risk",
+        "Flags the CartContext provider value being a new object every render",
+        "Flags the Dimensions change listener in HomeScreen having no cleanup",
+        "Flags the module-scope search index built in App.tsx as a startup cost",
+        "Does not claim OrdersScreen's setInterval leaks (it has a cleanup)",
+        "Proposes a small set of journeys (including cold start) and asks the user to choose / measure before changing code",
+        "Makes no code changes (diff is empty)",
+        "Lists leads with file:line locations"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "typing in the search box on the home screen is really laggy on android, like each letter shows up half a second late on our cheap redmi test phone. iphone seems ok. can you fix it",
+      "expected_output": "Measurement plan for Android release build, attribution to per-keystroke work (O(n*m) _.find, rendering 2500 cards in ScrollView, console.log), narrow fix labeled unverified until re-measured.",
+      "files": [
+        "tests/fixture-app"
+      ],
+      "assertions": [
+        "Identifies the _.find lookup inside the filter (quadratic per keystroke) in HomeScreen",
+        "Identifies that every keystroke re-renders/renders all product cards via ScrollView (no virtualization)",
+        "Gives a concrete Android release-build measurement procedure on the same device (profiler or perf monitor + fixed typing script)",
+        "States the fix is unverified until re-measured and asks for before/after numbers",
+        "Does not present invented measured numbers as results",
+        "Any code change is confined to the search path (no new frameworks, state libraries, or navigation migration)",
+        "Delivers a code change on the search path (the user asked for a fix) rather than only a plan",
+        "Labels the change as unmeasured/unverified and gives one before/after measurement script",
+        "Every claim in the response about what was changed is true of the diff"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "our android release apk went from 38mb to 61mb over the last few months and the play console is warning us. what's bloating it and how do we get it down?",
+      "expected_output": "Asks to analyze the actual release APK/AAB and JS bundle, points at minify off, all 4 ABIs in a universal APK, duplicate date libs, bundled 700KB JSON; separates JS vs native.",
+      "files": [
+        "tests/fixture-app"
+      ],
+      "assertions": [
+        "Identifies that release minification/R8 is disabled (enableProguardInReleaseBuilds = false)",
+        "Notes that all four ABIs (incl. x86/x86_64) are built and recommends AAB delivery or ABI splits",
+        "Identifies duplicate date libraries (moment and date-fns) and/or the whole-lodash import",
+        "Mentions the ~700KB catalog.json bundled into the JS",
+        "Asks for / gives steps to analyze the actual release artifact (APK Analyzer or bundle visualizer) before treating causes as confirmed",
+        "Separates JavaScript bundle size from native/binary size",
+        "Flags react-native-reanimated as installed but never imported (its native libraries ship for nothing)"
+      ]
+    }
+  ]
+}

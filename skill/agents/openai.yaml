@@ -1,0 +1,4 @@
+interface:
+  display_name: "React Native Optimization"
+  short_description: "Measure and improve React Native performance"
+  default_prompt: "Use $react-native-optimization to find and fix a measurable performance problem in this React Native app."

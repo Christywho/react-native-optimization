@@ -1,0 +1,39 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  posix:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck
+        if: runner.os == 'Linux'
+        run: shellcheck -s sh install.sh tests/install.test.sh tests/lint-skill.sh
+      - name: skill lint
+        run: sh tests/lint-skill.sh
+      - name: installer tests
+        run: sh tests/install.test.sh
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -Force -Scope CurrentUser
+          $issues = Invoke-ScriptAnalyzer -Path install.ps1 -Severity Error, Warning -ExcludeRule PSAvoidUsingWriteHost, PSAvoidUsingInvokeExpression
+          $issues | Format-Table -AutoSize
+          if ($issues) { exit 1 }
+      - name: installer tests
+        shell: pwsh
+        run: |
+          Install-Module Pester -MinimumVersion 5.0 -Force -Scope CurrentUser -SkipPublisherCheck
+          Invoke-Pester tests/install.Tests.ps1 -CI
