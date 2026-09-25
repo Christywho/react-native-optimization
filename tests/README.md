@@ -31,7 +31,7 @@ To check a host, install the skill, copy `fixture-app/` somewhere writable, open
 
 | Host | Last checked | Result |
 | --- | --- | --- |
-| Claude Code | 2026-09-25 (v1.0.0) | see release notes |
+| Claude Code | 2026-09-25 (v1.0.0) | all eval assertions pass (3 iterations) |
 | Codex | — | not yet run |
 | Gemini CLI | — | not yet run |
 | Cursor | — | not yet run |

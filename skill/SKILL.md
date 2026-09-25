@@ -53,7 +53,7 @@ Use [measurement and triage](references/measurement-and-triage.md) for the metri
 | Animation or gesture jank | Separate JS and UI/main-thread frame behavior | thread ownership, layout/mount work, high-frequency React updates |
 | Slow first useful screen | cold-start TTI timeline with meaningful interactivity marker | native initialization, bundle load, root render, blocking app work |
 | Steadily rising memory, memory-pressure termination | repeatable navigation/use cycle and heap/native allocation evidence | retained JS references, subscriptions/timers, image/native ownership, cycles |
-| Large download or installed app | release JS bundle *and* AAB/APK/IPA breakdown | dependencies, imports, native binaries, assets, release shrink settings |
+| Large download or installed app | release JS bundle *and* AAB/APK/IPA breakdown | dependencies, imports, native binaries (run the *Release size* checks in [the static scan](references/static-scan.md), especially unused native dependencies), assets, release shrink settings |
 | CPU, battery, or a native-side hang | platform trace correlated with the journey | UI/main thread, native module work, view hierarchy, network/disk churn |
 | **No specific symptom** ("review performance", "audit", "feels slow") | static scan → user-chosen journeys → baseline | whichever lane the measured journeys point to |
 

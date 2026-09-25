@@ -46,7 +46,7 @@ Scan the app's own source (skip `node_modules`, build output, and generated nati
 | Duplicate libraries for the same job | Two date libraries, two HTTP clients, two icon sets in `package.json` | Bundle and binary weight | Release size | Transitional migrations with a removal plan |
 | Large uncompressed assets | Files > ~200 KB under `assets/`, `src/**/images` (PNG/JPG/GIF/MP4/Lottie JSON) | Download and installed size | Release size | Assets downloaded on demand |
 | Android release shrinking off | `android/app/build.gradle`: `minifyEnabled false` / `enableProguardInReleaseBuilds = false`, no `shrinkResources true` | Larger APK/AAB | Release size | Expo managed projects where build properties configure this elsewhere — check `expo-build-properties` |
-| Unused native dependencies | Packages in `package.json` never imported in source | Native binary and startup init cost from autolinking | Release size / startup | Packages used only via config plugins |
+| Unused native dependencies | For each dependency with native code (has `android/` or `ios/` in `node_modules/<pkg>`, or is a known native library), grep `src/` and the entry file for imports. A reference only in `babel.config.js`, `app.json` plugins, or `metro.config.js` is **not** use: the native library is still autolinked into every ABI while no code calls it | Native `.so`/framework weight in every ABI, plus startup init from autolinking | Release size / startup | Peer dependencies of something you *do* import (e.g. `react-native-screens` and `react-native-safe-area-context` for React Navigation) are in use even with no direct import: check the importing library's `peerDependencies` before calling a package unused. Packages used only via Expo config plugins |
 
 ## After the scan
 

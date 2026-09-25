@@ -17,7 +17,8 @@
         "Does not claim OrdersScreen's setInterval leaks (it has a cleanup)",
         "Proposes a small set of journeys (including cold start) and asks the user to choose / measure before changing code",
         "Makes no code changes (diff is empty)",
-        "Lists leads with file:line locations"
+        "Lists leads with file:line locations",
+        "Does not call a required peer dependency (react-native-screens, react-native-safe-area-context) unused or removable"
       ]
     },
     {
