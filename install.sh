@@ -183,7 +183,9 @@ else
 	fetch "$url" >"$TMP/src.tar.gz" || die "download failed: $url (does tag $VERSION exist?)"
 	tar -xzf "$TMP/src.tar.gz" -C "$TMP" || die "could not unpack $url"
 	SRC=$(find "$TMP" -mindepth 2 -maxdepth 2 -type d -name skill | head -n 1)
-	[ -n "$SRC" ] && [ -f "$SRC/SKILL.md" ] || die "release $VERSION has no skill/ folder"
+	if [ -z "$SRC" ] || [ ! -f "$SRC/SKILL.md" ]; then
+		die "release $VERSION has no skill/ folder"
+	fi
 fi
 
 # ---- install ----------------------------------------------------------------

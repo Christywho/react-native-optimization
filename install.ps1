@@ -56,8 +56,10 @@ Options:
 '@
 }
 
+$script:IsDryRun = [bool]$DryRun
+
 function Invoke-Step([string]$Description, [scriptblock]$Action) {
-    if ($DryRun) { Write-Host "would: $Description" } else { & $Action }
+    if ($script:IsDryRun) { Write-Host "would: $Description" } else { & $Action }
 }
 
 if ($Help) { Show-Usage; return }

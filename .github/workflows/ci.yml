@@ -8,11 +8,12 @@ on:
 jobs:
   posix:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: shellcheck
         if: runner.os == 'Linux'
         run: shellcheck -s sh install.sh tests/install.test.sh tests/lint-skill.sh
@@ -24,7 +25,7 @@ jobs:
   windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: PSScriptAnalyzer
         shell: pwsh
         run: |
